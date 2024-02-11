@@ -1,0 +1,47 @@
+#include <iostream>
+#include <fstream>
+#include <string>
+using namespace std;
+
+void addEntry(string name, string exercise, int duration, string filename) {
+    ofstream outfile;
+    outfile.open(filename, ios_base::app);
+    outfile << name << ", " << exercise << ", " << duration << " minutes" << endl;
+    outfile.close();
+    cout << "Entry added!" << endl;
+}
+
+void viewEntries(string filename) {
+    ifstream infile;
+    infile.open(filename);
+    string line;
+    while (getline(infile, line)) {
+        cout << line << endl;
+    }
+    infile.close();
+}
+
+int main() {
+    string name, exercise, filename;
+    int duration, choice;
+    cout << "Welcome to Health Management Program!" << endl;
+    cout << "Enter your name: ";
+    getline(cin, name);
+    filename = name + ".txt";
+    cout << "What would you like to do?" << endl;
+    cout << "1. Add an entry" << endl;
+    cout << "2. View previous entries" << endl;
+    cin >> choice;
+    if (choice == 1) {
+        cout << "Enter exercise name: ";
+        cin >> exercise;
+        cout << "Enter exercise duration (in minutes): ";
+        cin >> duration;
+        addEntry(name, exercise, duration, filename);
+    } else if (choice == 2) {
+        viewEntries(filename);
+    } else {
+        cout << "Invalid choice!" << endl;
+    }
+    return 0;
+}

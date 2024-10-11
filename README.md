@@ -1,2 +1,1 @@
-hey, this is avi 
-I will be uploading all the mini-projects that I will be making for my courses in college
+Hey, this is Avi. In this repository, I’ll be sharing all the mini projects I worked on during my college years. These projects cover a variety of topics and can be useful as references or starting points for your own class assignments. Feel free to modify them or use them as inspiration, but please avoid uploading them to GitHub or any other public repositories to maintain the integrity of the work. I hope these resources help you in your learning journey!

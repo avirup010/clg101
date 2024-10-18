@@ -1,0 +1,139 @@
+# To use this code first you need to have PyQt installed on your system to do that open terminal and the type the command "pip install PyQt5" 
+
+
+import sys
+from PyQt5.QtWidgets import (QApplication, QMainWindow, QWidget, QVBoxLayout, QLabel,
+                             QPushButton, QLineEdit, QListWidget, QMessageBox, QHBoxLayout)
+from PyQt5.QtGui import QFont, QColor
+from PyQt5.QtCore import Qt
+
+class MenuItem:
+    """Class representing a menu item."""
+    def __init__(self, name, price):
+        self.name = name
+        self.price = price
+
+    def __str__(self):
+        return f"{self.name} - Rs {self.price}"
+
+class RestaurantManagementSystem(QMainWindow):
+    def __init__(self):
+        super().__init__()
+
+        self.setWindowTitle("Restaurant Management System")
+        self.setGeometry(100, 100, 600, 500)
+
+        # Store menu items and orders
+        self.menu_items = []
+        self.current_order = []
+
+        self.central_widget = QWidget(self)
+        self.setCentralWidget(self.central_widget)
+
+        self.layout = QVBoxLayout(self.central_widget)
+
+        # Fonts and styles for better aesthetics
+        title_font = QFont("Arial", 16, QFont.Bold)
+        label_font = QFont("Arial", 12)
+        button_font = QFont("Arial", 11)
+        
+        # Menu Section
+        self.menu_label = QLabel("Menu Items:")
+        self.menu_label.setFont(title_font)
+        self.menu_label.setStyleSheet("color: #333333;")
+        self.layout.addWidget(self.menu_label)
+
+        self.menu_list = QListWidget()
+        self.layout.addWidget(self.menu_list)
+
+        # Input fields for adding menu items
+        self.menu_layout = QHBoxLayout()
+
+        self.menu_input = QLineEdit()
+        self.menu_input.setPlaceholderText("Add new menu item...")
+        self.menu_input.setFont(label_font)
+        self.menu_layout.addWidget(self.menu_input)
+
+        self.menu_price_input = QLineEdit()
+        self.menu_price_input.setPlaceholderText("Price (Rs)")
+        self.menu_price_input.setFont(label_font)
+        self.menu_layout.addWidget(self.menu_price_input)
+
+        self.layout.addLayout(self.menu_layout)
+
+        self.add_menu_button = QPushButton("Add Menu Item")
+        self.add_menu_button.setFont(button_font)
+        self.add_menu_button.setStyleSheet("background-color: #4CAF50; color: white; padding: 10px;")
+        self.add_menu_button.clicked.connect(self.add_menu_item)
+        self.layout.addWidget(self.add_menu_button)
+
+        # Order Section
+        self.order_label = QLabel("Select Customer Orders:")
+        self.order_label.setFont(title_font)
+        self.order_label.setStyleSheet("color: #333333;")
+        self.layout.addWidget(self.order_label)
+
+        self.order_list = QListWidget()
+        self.layout.addWidget(self.order_list)
+
+        self.add_order_button = QPushButton("Add Selected Item to Order")
+        self.add_order_button.setFont(button_font)
+        self.add_order_button.setStyleSheet("background-color: #008CBA; color: white; padding: 10px;")
+        self.add_order_button.clicked.connect(self.add_order)
+        self.layout.addWidget(self.add_order_button)
+
+        self.bill_button = QPushButton("Generate Bill")
+        self.bill_button.setFont(button_font)
+        self.bill_button.setStyleSheet("background-color: #FF5722; color: white; padding: 10px;")
+        self.bill_button.clicked.connect(self.generate_bill)
+        self.layout.addWidget(self.bill_button)
+
+    def add_menu_item(self):
+        """Add a new menu item to the list."""
+        item_name = self.menu_input.text()
+        item_price = self.menu_price_input.text()
+
+        if item_name and item_price:
+            try:
+                price = float(item_price)
+                menu_item = MenuItem(item_name, price)
+                self.menu_items.append(menu_item)
+                self.menu_list.addItem(str(menu_item))  # Display in menu list
+                self.menu_input.clear()
+                self.menu_price_input.clear()
+            except ValueError:
+                QMessageBox.warning(self, "Error", "Please enter a valid price.")
+        else:
+            QMessageBox.warning(self, "Warning", "Please enter both the item name and price.")
+
+    def add_order(self):
+        """Add the selected menu item to the customer's order."""
+        selected_item = self.menu_list.currentItem()
+        if selected_item:
+            self.order_list.addItem(selected_item.text())
+            item_index = self.menu_list.currentRow()
+            self.current_order.append(self.menu_items[item_index])
+        else:
+            QMessageBox.warning(self, "Warning", "Please select a menu item to add to the order.")
+
+    def generate_bill(self):
+        """Generate and display the final bill."""
+        if not self.current_order:
+            QMessageBox.warning(self, "Warning", "No items in the order to generate a bill.")
+            return
+
+        total_price = sum(item.price for item in self.current_order)
+        order_details = "\n".join([str(item) for item in self.current_order])
+
+        bill = f"Bill:\n\n{order_details}\n\nTotal Amount: Rs {total_price}"
+        QMessageBox.information(self, "Bill", bill)
+
+        # Clear order after generating bill
+        self.order_list.clear()
+        self.current_order.clear()
+
+if __name__ == "__main__":
+    app = QApplication(sys.argv)
+    window = RestaurantManagementSystem()
+    window.show()
+    sys.exit(app.exec_())

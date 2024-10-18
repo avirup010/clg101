@@ -1,50 +1,108 @@
-##this is a todo list app named todono that helps you to make basic todo lists.
+import sys
+from PyQt5.QtWidgets import QApplication, QWidget, QVBoxLayout, QHBoxLayout, QPushButton, QLineEdit, QListWidget, QMessageBox
+from PyQt5.QtCore import Qt
+from PyQt5.QtGui import QFont
 
-
-
+# Task list
 tasks = []
-def addtask():
-    task = input("Please enter a task :)")
-    tasks.append(task)
-    print(f"Task '{task}' has been added to the list.")
-def listtasks():
-    if not tasks:
-        print("There are no tasks currently.")
-    else:
-        print("Current tasks : ")
-        for index, task in enumerate(tasks):
-            print(f"Task #'{index}' '{task}'")
-def deletetask():
-    listtasks()
-    try:
-        tasktoDelete = int(input("Enter the task# to delete: "))
-        if tasktoDelete >= 0 and tasktoDelete < len(tasks):
-            tasks.pop(tasktoDelete)
-            print(f"Task #'{tasktoDelete}' has been removed.")
-        else :
-            print(f"Task #'{tasktoDelete}' was not found.")
-    except:
-            print("Invalid Input")
 
-if __name__ == "__main__" :
-    print("Welcome to todono")
-    while True:
-        print("\n")
-        print("Please select one of the following options")
-        print("__________________________________________")
-        print("1. Add a new task ")
-        print("2. Delete a task ")
-        print("3. List tasks ")
-        print("1. Quit ")
-        choice = input("Enter your choice: ")
-        if(choice == "1"):
-            addtask()
-        elif(choice == "2"):
-            deletetask()
-        elif(choice == "3"):
-            listtasks()
-        elif(choice == "4"):
-            break
+# Main Application Window
+class ToDoNoApp(QWidget):
+    def __init__(self):
+        super().__init__()
+
+        # Window properties
+        self.setWindowTitle("ToDoNo")
+        self.setGeometry(100, 100, 400, 400)
+
+        # Layout for the entire window
+        layout = QVBoxLayout()
+
+        # Title Label
+        self.setStyleSheet("background-color: #E8F6F3;")
+        title_font = QFont("Arial", 24, QFont.Bold)
+        
+        self.title = QPushButton("ToDoNo")
+        self.title.setFont(title_font)
+        self.title.setStyleSheet("color: #2F3E46; border: none;")
+        layout.addWidget(self.title, alignment=Qt.AlignCenter)
+
+        # Input for adding tasks
+        self.task_input = QLineEdit(self)
+        self.task_input.setPlaceholderText("Enter a new task")
+        self.task_input.setFont(QFont("Arial", 14))
+        layout.addWidget(self.task_input)
+
+        # Add and Delete buttons
+        button_layout = QHBoxLayout()
+        
+        self.add_button = QPushButton("Add Task", self)
+        self.add_button.setStyleSheet("background-color: #C3E0E5; color: #2F3E46; border-radius: 10px; padding: 10px;")
+        self.add_button.setFont(QFont("Arial", 12))
+        self.add_button.clicked.connect(self.add_task)
+        button_layout.addWidget(self.add_button)
+
+        self.delete_button = QPushButton("Delete Task", self)
+        self.delete_button.setStyleSheet("background-color: #C3E0E5; color: #2F3E46; border-radius: 10px; padding: 10px;")
+        self.delete_button.setFont(QFont("Arial", 12))
+        self.delete_button.clicked.connect(self.delete_task)
+        button_layout.addWidget(self.delete_button)
+
+        layout.addLayout(button_layout)
+
+        # List to display tasks
+        self.task_list = QListWidget(self)
+        self.task_list.setFont(QFont("Arial", 12))
+        layout.addWidget(self.task_list)
+
+        # Quit button
+        self.quit_button = QPushButton("Quit", self)
+        self.quit_button.setStyleSheet("background-color: #C3E0E5; color: #2F3E46; border-radius: 10px; padding: 10px;")
+        self.quit_button.setFont(QFont("Arial", 12))
+        self.quit_button.clicked.connect(self.close_app)
+        layout.addWidget(self.quit_button)
+
+        # Set the layout
+        self.setLayout(layout)
+
+    # Method to add task
+    def add_task(self):
+        task = self.task_input.text()
+        if task:
+            tasks.append(task)
+            self.update_task_list()
+            self.task_input.clear()
         else:
-            printf("Invalid Input. Please try again.")
-    print("You are now exiting the app. Goodbye.")
+            QMessageBox.warning(self, "Input Error", "Please enter a task.")
+
+    # Method to update the task list
+    def update_task_list(self):
+        self.task_list.clear()
+        if not tasks:
+            self.task_list.addItem("No tasks available.")
+        else:
+            for index, task in enumerate(tasks):
+                self.task_list.addItem(f"Task #{index + 1}: {task}")
+
+    # Method to delete a task
+    def delete_task(self):
+        selected_task = self.task_list.currentRow()
+        if selected_task >= 0 and selected_task < len(tasks):
+            tasks.pop(selected_task)
+            self.update_task_list()
+        else:
+            QMessageBox.warning(self, "Selection Error", "Please select a task to delete.")
+
+    # Method to quit the app
+    def close_app(self):
+        self.close()
+
+# Main function to start the application
+def main():
+    app = QApplication(sys.argv)
+    window = ToDoNoApp()
+    window.show()
+    sys.exit(app.exec())
+
+if __name__ == "__main__":
+    main()

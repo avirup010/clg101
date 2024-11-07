@@ -1,0 +1,46 @@
+import tkinter as tk
+import psutil
+from tkinter import font
+
+def get_system_info():
+    # Gather system information as a formatted string
+    info = "Linux System Monitor - System Snapshot\n"
+    info += "-" * 50 + "\n"
+    cpu_usage = psutil.cpu_percent(interval=1)
+    memory_info = psutil.virtual_memory()
+    info += f"\nCPU Usage: {cpu_usage}%\n"
+    info += f"Memory Usage: {memory_info.percent}% ({memory_info.used / (1024**2):.2f} MB used)\n"
+    info += "\nPID     Name                CPU%     Memory%\n"
+    info += "-" * 50 + "\n"
+
+    for proc in psutil.process_iter(['pid', 'name', 'cpu_percent', 'memory_percent']):
+        try:
+            info += f"{proc.info['pid']:<8}{proc.info['name']:<20}{proc.info['cpu_percent']:<10}{proc.info['memory_percent']:.2f}%\n"
+        except (psutil.NoSuchProcess, psutil.AccessDenied):
+            continue
+
+    return info
+
+def display_info_in_gui():
+    # Create the main window
+    root = tk.Tk()
+    root.title("Linux Terminal - System Snapshot")
+
+    # Set window size and style to look like a terminal
+    root.geometry("800x600")
+    root.configure(bg="black")
+
+    # Define a custom font for better readability
+    terminal_font = font.Font(family="Courier New", size=12)
+
+    # Create a text widget to display the output
+    text_widget = tk.Text(root, wrap="word", bg="black", fg="green", insertbackground="white", font=terminal_font)
+    text_widget.insert("1.0", get_system_info())
+    text_widget.configure(state="disabled")  # Make the text read-only
+    text_widget.pack(expand=True, fill="both", padx=10, pady=10)
+
+    # Start the GUI loop
+    root.mainloop()
+
+if __name__ == "__main__":
+    display_info_in_gui()

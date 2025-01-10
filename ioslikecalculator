@@ -1,0 +1,153 @@
+import tkinter as tk
+from tkinter import font
+
+# Functionality of the calculator
+def button_click(value):
+    if value == "C":
+        entry_field.delete(0, tk.END)
+    elif value == "\u232B":  # Unicode for the delete symbol
+        entry_field.delete(len(entry_field.get())-1, tk.END)
+    elif value == "=":
+        try:
+            result = eval(entry_field.get())
+            entry_field.delete(0, tk.END)
+            entry_field.insert(0, str(result))
+        except:
+            entry_field.delete(0, tk.END)
+            entry_field.insert(0, "Error")
+    else:
+        entry_field.insert(tk.END, value)
+
+# Toggle theme
+light_mode = True
+
+def toggle_theme():
+    global light_mode
+    if light_mode:
+        root.configure(bg="white")
+        entry_field.configure(bg="white", fg="black", insertbackground="black")
+        for button in button_widgets:
+            button["bg"] = light_button_colors.get(button["text"], "#e0e0e0")
+            button["fg"] = "black"
+            button["activebackground"] = light_button_colors.get(button["text"], "#d9d9d9")
+            button["activeforeground"] = "black"
+        theme_button.configure(text="Dark Mode", bg="#d3d3d3", fg="black")
+    else:
+        root.configure(bg="#1C1C1E")
+        entry_field.configure(bg="#2C2C2E", fg="white", insertbackground="white")
+        for button in button_widgets:
+            button["bg"] = button_colors.get(button["text"], "#505050")
+            button["fg"] = "white"
+            button["activebackground"] = button_colors.get(button["text"], "#3A3A3C")
+            button["activeforeground"] = "white"
+        theme_button.configure(text="Light Mode", bg="#505050", fg="white")
+    light_mode = not light_mode
+
+# Key press handling
+def key_press(event):
+    key = event.char
+    if key in "0123456789+-*/.=":
+        button_click(key)
+    elif key == "\r":  # Enter key
+        button_click("=")
+    elif key == "\x08":  # Backspace key
+        button_click("\u232B")
+    elif key.lower() == "c":
+        button_click("C")
+
+# Initialize the main application window
+root = tk.Tk()
+root.title("iOS-Style Calculator")
+root.geometry("360x600")
+root.resizable(False, False)
+root.configure(bg="#1C1C1E")
+
+# Bind keypress events
+root.bind("<Key>", key_press)
+
+# Custom fonts
+button_font = font.Font(family="Helvetica", size=20, weight="bold")
+entry_font = font.Font(family="Helvetica", size=30, weight="bold")
+
+# Entry field for calculations
+entry_field = tk.Entry(
+    root, font=entry_font, justify="right", bg="#2C2C2E", fg="white", borderwidth=0, insertbackground="white"
+)
+entry_field.grid(row=0, column=0, columnspan=4, ipadx=8, ipady=15, sticky="nsew", padx=10, pady=10)
+
+# Button configuration
+buttons = [
+    ["C", "\u232B", "%", "/"],
+    ["7", "8", "9", "*"],
+    ["4", "5", "6", "-"],
+    ["1", "2", "3", ""],
+    ["0", ".", "=", "+"]
+]
+
+# Button colors
+special_button_color = "#FF9500"  # Orange for operations
+number_button_color = "#505050"   # Dark gray for numbers
+background_button_color = "#3A3A3C"
+text_color = "white"
+
+light_button_colors = {
+    "C": "#ff9999", "\u232B": "#ff9999", "%": "#ffcc80", "/": "#80bfff",
+    "*": "#80bfff", "-": "#80bfff", "+": "#80bfff", "=": "#80ffaa",
+    "0": "#e0e0e0", "1": "#e0e0e0", "2": "#e0e0e0", "3": "#e0e0e0",
+    "4": "#e0e0e0", "5": "#e0e0e0", "6": "#e0e0e0", "7": "#e0e0e0",
+    "8": "#e0e0e0", "9": "#e0e0e0", ".": "#e0e0e0"
+}
+
+button_colors = {
+    "C": "#FF3B30", "\u232B": "#FF3B30", "%": "#FFCC00", "/": "#FF9500",
+    "*": "#FF9500", "-": "#FF9500", "+": "#FF9500", "=": "#34C759",
+    "0": "#505050", "1": "#505050", "2": "#505050", "3": "#505050",
+    "4": "#505050", "5": "#505050", "6": "#505050", "7": "#505050",
+    "8": "#505050", "9": "#505050", ".": "#505050"
+}
+
+# Create buttons dynamically
+button_widgets = []
+for i, row in enumerate(buttons):
+    for j, button in enumerate(row):
+        if button:
+            color = (
+                special_button_color if button in ["/", "*", "-", "+", "="]
+                else background_button_color if button in ["C", "%", "\u232B"]
+                else number_button_color
+            )
+
+            btn = tk.Button(
+                root,
+                text=button,
+                font=button_font,
+                bg=color,
+                fg=text_color,
+                activebackground=color,
+                activeforeground=text_color,
+                borderwidth=0,
+                highlightthickness=0,
+                command=lambda value=button: button_click(value),
+                relief="flat",
+            )
+            btn.grid(
+                row=i + 1, column=j, sticky="nsew", padx=5, pady=5
+            )
+            button_widgets.append(btn)
+
+# Theme toggle button
+theme_button = tk.Button(
+    root, text="Light Mode", font=button_font, bg="#505050", fg="white",
+    activebackground="#3A3A3C", activeforeground="white", borderwidth=0,
+    command=toggle_theme
+)
+theme_button.grid(row=6, column=0, columnspan=4, sticky="nsew", padx=10, pady=10)
+
+# Adjust row and column weights
+for i in range(6):
+    root.grid_rowconfigure(i, weight=1)
+for j in range(4):
+    root.grid_columnconfigure(j, weight=1)
+
+# Start the application
+root.mainloop()

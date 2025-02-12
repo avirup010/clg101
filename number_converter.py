@@ -1,5 +1,25 @@
-import tkinter as tk
+"""
+Binary Calculator using Tkinter
+This is a simple Binary Calculator built using Python and Tkinter. It allows users to perform 
+basic arithmetic operations (addition, subtraction, multiplication, and division) on binary numbers. The results are displayed in binary format.
 
+Features
+Supports addition (+), subtraction (-), multiplication (*), and division (/).
+Takes binary input and displays the result in binary format.
+Uses a simple GUI built with Tkinter.
+Handles invalid input and division by zero errors.
+Requirements
+To run this script, you need Python 3.x installed. Tkinter is included by default with Python.
+
+Run the script:
+python binary_calculator.py
+
+Potential Improvements
+Add floating-point support for division.
+Enhance the UI with modern styles using ttk.
+Add history tracking for previous calculations.
+"""
+import tkinter as tk
 
 def binary_to_decimal(binary_str):
     return int(binary_str, 2)

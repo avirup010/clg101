@@ -1,3 +1,26 @@
+'''
+This is a minimalist Snake game built with Pygame, featuring a resizable window, smooth animations, a dark/light mode toggle, speed adjustment, a pause function, and a help menu. The game starts with a welcome screen and allows the player to control the snake using the arrow keys, with food spawning randomly on the grid. The snake wraps around screen edges, grows upon eating food, and the game ends if it collides with itself.
+
+Requirements to Run the Game
+To run this game, you need to install Python and Pygame.
+
+Installation Steps:
+Install Python (if not already installed) – Download Python
+Install Pygame using pip:
+sh
+Copy
+Edit
+pip install pygame
+Run the game script:
+sh
+Copy
+Edit
+python snake_game.py
+'''
+
+
+
+
 import pygame
 import random
 import sys

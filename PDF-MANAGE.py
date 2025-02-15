@@ -1,5 +1,7 @@
-#pdf manager 
-
+"""PDF-MANAGE is a PyQt6-based PDF Manager that provides a tabbed interface for merging, splitting, watermarking, and compressing PDFs.
+It uses PyMuPDF (fitz) for handling PDF operations and features a modern UI with buttons, sliders, progress bars, and drag-and-drop support. 
+The interface follows a light-themed design with QSS styling and allows users to interact with PDFs seamlessly. 
+The code is structured with object-oriented principles, ensuring modularity and ease of maintenance."""
 import sys
 import os
 import fitz  # PyMuPDF

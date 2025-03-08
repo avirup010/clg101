@@ -11,7 +11,7 @@ class CurrencyConverter:
         self.root.configure(bg="#2c3e50")
 
         # API Key - Replace 'YOUR_API_KEY_HERE' with your actual Fixer.io API key
-        self.api_key = "a2ef8843ef048b4e195640c354fd625b"
+        self.api_key = "API_KEY"
 
         # Style configuration
         style = ttk.Style()

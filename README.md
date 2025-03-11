@@ -13,14 +13,7 @@ This repository contains self-contained mini-projects that showcase different co
 🔍 AI & Cybersecurity – Small AI-driven security models
 ⚙️ Embedded Linux & Systems – Low-level programming projects
 
-🛠️ How to Use?
-Clone the repository
-git clone https://github.com/yourusername/college-projects.git
-cd college-projects
 
-Navigate to a project folder
-Follow the setup instructions (if any) in the project README
-Run the project (typically using Python or other tools)
 
 🚨 Contribution & Usage Guidelines
 Modify, experiment, and learn from these projects.
